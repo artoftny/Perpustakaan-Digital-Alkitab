@@ -1,126 +1,314 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perpustakaan Digital Alkitab</title>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f8f6f0;
-            color: #40372d;
-        }
-
-        header {
-            background: #fff;
-            padding: 20px;
-            text-align: center;
-        }
-
-        header h1 {
-            font-size: 22px;
-        }
-
-        nav {
-            background: #72583e;
-            padding: 14px;
-            text-align: center;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 8px;
-        }
-
-        .hero {
-            padding: 45px 20px;
-            text-align: center;
-            background: #e9dfd0;
-        }
-
-        .hero h2 {
-            font-size: 28px;
-        }
-
-        .hero p {
-            line-height: 1.7;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 12px;
-        }
-
-        .card h3 {
-            color: #72583e;
-        }
-
-        footer {
-            background: #72583e;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#6d563f">
+<meta name="description" content="Perpustakaan Digital Alkitab — belajar, memahami, dan merenungkan Alkitab.">
+<title>Perpustakaan Digital Alkitab</title>
+<style>
+:root{--ink:#342b23;--muted:#776b5e;--brown:#70563d;--brown2:#8b7054;--cream:#f7f4ee;--paper:#fffefa;--line:#e9e1d5;--sage:#e8eee5;--gold:#c49b60}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.6}
+a{color:inherit;text-decoration:none}button,input{font:inherit}
+header{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.navwrap{max-width:1100px;margin:auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:750;letter-spacing:-.3px}.brandicon{width:39px;height:39px;border-radius:13px;background:var(--brown);color:white;display:grid;place-items:center;font-size:21px}
+nav{display:flex;gap:20px;color:var(--muted);font-size:14px}nav a:hover,nav a.active{color:var(--brown);font-weight:750}.page-extra{min-height:55vh}.feature.clickable{cursor:pointer;transition:.15s}.feature.clickable:hover{transform:translateY(-2px);border-color:#b9a58d;box-shadow:0 7px 18px #342b230c}.feature.clickable:focus{outline:2px solid var(--brown2);outline-offset:2px}
+.menu{display:none;background:none;border:0;font-size:24px;color:var(--brown)}
+.hero{background:linear-gradient(135deg,#eee5d7,#e5eadf);padding:64px 20px 58px}
+.hero-inner{max-width:1100px;margin:auto;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:30px}
+.eyebrow{color:var(--brown2);font-weight:750;font-size:12px;letter-spacing:1.8px;text-transform:uppercase}
+h1{font-family:Georgia,serif;font-size:clamp(36px,6vw,58px);line-height:1.08;letter-spacing:-1.4px;margin:12px 0 16px;font-weight:600}
+.hero p{max-width:590px;color:#5f5448;font-size:17px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--brown);border-radius:999px;padding:11px 18px;font-weight:650;font-size:14px;cursor:pointer}
+.btn.primary{background:var(--brown);color:white}.btn.secondary{color:var(--brown);background:transparent}
+.hero-art{min-height:230px;border-radius:26px;background:linear-gradient(145deg,#8b765e,#514331);display:grid;place-items:center;color:#f9f0df;box-shadow:0 18px 45px #51433122;position:relative;overflow:hidden}
+.hero-art:before,.hero-art:after{content:"";position:absolute;border:1px solid #ffffff33;border-radius:50%;width:240px;height:240px}
+.hero-art:after{width:310px;height:310px}
+.book{font-size:92px;filter:drop-shadow(0 10px 12px #21180f55);z-index:1}
+main{max-width:1100px;margin:auto;padding:42px 20px 70px}
+.section{margin:0 0 52px;scroll-margin-top:90px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:18px}
+h2{font-family:Georgia,serif;font-size:30px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--muted);margin:0;font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:-15px;margin-bottom:45px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px;text-align:center}
+.stat strong{display:block;font:600 27px Georgia,serif;color:var(--brown)}.stat span{font-size:12px;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.tab{border:1px solid var(--line);background:var(--paper);color:var(--muted);padding:8px 14px;border-radius:999px;cursor:pointer;font-size:13px}
+.tab.active{background:var(--brown);border-color:var(--brown);color:white}
+.search{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:13px;background:var(--paper);outline:none}
+.search:focus{border-color:var(--brown2);box-shadow:0 0 0 3px #8b70541c}
+.bookgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:15px}
+.bookcard{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:13px;text-align:left;cursor:pointer;transition:.15s}
+.bookcard:hover{transform:translateY(-2px);border-color:#b9a58d;box-shadow:0 7px 18px #342b230c}
+.bookcard b{display:block;font-size:14px}.bookcard small{color:var(--muted);font-size:11px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:24px}
+.panel h3{font:600 25px Georgia,serif;margin:0 0 8px}
+.pill{display:inline-block;border-radius:999px;background:var(--sage);color:#52644d;padding:4px 10px;font-size:11px;font-weight:700}
+.chapterrow{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
+.chapter{width:42px;height:42px;border-radius:10px;border:1px solid var(--line);background:white;color:var(--brown);cursor:pointer}
+.chapter.active{background:var(--brown);color:white;border-color:var(--brown)}
+.contentnote{background:#f6f1e8;border-left:3px solid var(--gold);padding:13px 15px;border-radius:0 10px 10px 0;color:#665846;font-size:13px;margin-top:15px}
+.featuregrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.feature{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:20px}
+.feature .emoji{font-size:25px}.feature h3{margin:10px 0 4px;font-size:16px}.feature p{color:var(--muted);font-size:13px;margin:0}
+.reflection{background:var(--sage);border-radius:20px;padding:26px}
+.reflection h3{font:600 25px Georgia,serif;margin:8px 0}.reflection p{color:#52604f}
+footer{background:#493b2d;color:#f8f1e6;padding:30px 20px;text-align:center}
+footer p{margin:5px;color:#e0d4c4;font-size:13px}
+.modalback{position:fixed;inset:0;background:#1e1914a8;display:none;align-items:center;justify-content:center;padding:18px;z-index:30}
+.modalback.show{display:flex}.modal{background:var(--paper);border-radius:20px;padding:24px;max-width:520px;width:100%;max-height:85vh;overflow:auto}
+.modalhead{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:#eee7dd;border-radius:50%;width:34px;height:34px;cursor:pointer}
+.empty{color:var(--muted);padding:20px;text-align:center;grid-column:1/-1}
+@media(max-width:760px){nav{display:none;position:absolute;top:62px;left:0;right:0;background:var(--paper);padding:16px 20px;flex-direction:column;border-bottom:1px solid var(--line)}nav.open{display:flex}.menu{display:block}.hero-inner{grid-template-columns:1fr}.hero-art{min-height:150px}.book{font-size:65px}.bookgrid{grid-template-columns:repeat(2,1fr)}.featuregrid{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:13px 6px}.stat strong{font-size:23px}main{padding-top:30px}.section-head{align-items:start;flex-direction:column}}
+</style>
 </head>
-
 <body>
-
 <header>
-    <h1>📖 Perpustakaan Digital Alkitab</h1>
-    <p>Belajar dan memahami Firman Tuhan</p>
+ <div class="navwrap">
+  <a class="brand" href="#beranda" data-page="beranda"><span class="brandicon">✝</span><span>Perpustakaan Digital Alkitab</span></a>
+  <button class="menu" id="menuBtn" aria-label="Buka menu">☰</button>
+  <nav id="nav">
+   <a href="#beranda" data-page="beranda">Beranda</a>
+   <a href="#alkitab" data-page="alkitab">Alkitab</a>
+   <a href="#renungan" data-page="renungan">Renungan</a>
+   <a href="#tokoh" data-page="tokoh">Tokoh</a>
+   <a href="#kamus" data-page="kamus">Kamus</a>
+  </nav>
+ </div>
 </header>
-
-<nav>
-    <a href="#beranda">Beranda</a>
-    <a href="#alkitab">Alkitab</a>
-    <a href="#renungan">Renungan</a>
-</nav>
-
 <section class="hero" id="beranda">
-    <h2>Mengenal Firman Tuhan</h2>
-    <p>
-        Pelajari isi Alkitab, pahami pesannya,
-        dan temukan pelajaran untuk kehidupan.
-    </p>
+ <div class="hero-inner">
+  <div><div class="eyebrow">Belajar • Memahami • Merenungkan</div>
+   <h1>Mengenal Firman Tuhan, selangkah demi selangkah.</h1>
+   <p>Ruang belajar digital untuk menjelajahi kitab-kitab Alkitab, memahami konteksnya, dan menemukan pertanyaan refleksi bagi kehidupan sehari-hari.</p>
+   <div class="actions"><a class="btn primary" href="#alkitab" data-page="alkitab">Jelajahi Alkitab →</a><a class="btn secondary" href="#renungan" data-page="renungan">Renungan harian</a></div>
+  </div>
+  <div class="hero-art" aria-label="Ilustrasi buku"><div class="book">📖</div></div>
+ </div>
 </section>
+<main>
+ <div class="stats">
+  <div class="stat"><strong>66</strong><span>Kitab dalam kanon Protestan</span></div>
+  <div class="stat"><strong>39</strong><span>Perjanjian Lama</span></div>
+  <div class="stat"><strong>27</strong><span>Perjanjian Baru</span></div>
+ </div>
+ <section class="section" id="alkitab">
+  <div class="section-head"><div><div class="eyebrow">Perpustakaan</div><h2>Jelajahi kitab-kitab</h2><p class="sub">Pilih kitab untuk melihat pengantar dan daftar pasalnya.</p></div></div>
+  <input class="search" id="search" type="search" placeholder="Cari nama kitab, misalnya Kejadian atau Yohanes..." aria-label="Cari kitab">
+  <div class="tabs"><button class="tab active" data-filter="all">Semua kitab</button><button class="tab" data-filter="old">Perjanjian Lama</button><button class="tab" data-filter="new">Perjanjian Baru</button></div>
+  <div class="bookgrid" id="bookGrid"></div>
+ </section>
+ <section class="section" id="detail">
+  <div class="section-head"><div><div class="eyebrow">Ruang baca</div><h2>Mulai memahami pasal</h2><p class="sub">Contoh format ringkasan yang akan digunakan di setiap pasal.</p></div></div>
+  <div class="panel" id="bookDetail">
+   <span class="pill">CONTOH FORMAT</span><h3>Kejadian 1 — Penciptaan</h3>
+   <p>Pasal ini menceritakan penciptaan langit dan bumi, pengaturan terang, cakrawala, daratan, tumbuh-tumbuhan, benda-benda penerang, hewan, serta manusia.</p>
+   <h4>Pokok yang dapat diperhatikan</h4><ul><li>Allah digambarkan sebagai pencipta segala sesuatu.</li><li>Penciptaan berlangsung secara teratur.</li><li>Manusia menerima tanggung jawab atas ciptaan.</li></ul>
+   <h4>Pertanyaan refleksi</h4><p>Bagaimana kita dapat menghargai kehidupan dan merawat ciptaan dalam keseharian?</p>
+   <div class="contentnote">Ini contoh ringkasan orisinal, bukan pengganti teks Alkitab. Bacalah Kejadian 1 dalam Alkitab TB LAI untuk memeriksa konteks lengkapnya.</div>
+  </div>
+ </section>
+ <section class="section" id="renungan">
+  <div class="section-head"><div><div class="eyebrow">Berhenti sejenak</div><h2>Renungan dan refleksi</h2><p class="sub">Ruang untuk membaca, berpikir, dan menerapkan nilai yang dipelajari.</p></div></div>
+  <div class="reflection"><span class="pill">CONTOH REFLEKSI</span><h3>Menghargai kehidupan</h3><p>Kisah penciptaan mengajak pembaca memperhatikan nilai kehidupan dan tanggung jawab manusia terhadap dunia yang dipercayakan kepadanya.</p><b>Pertanyaan hari ini:</b><p>Apa satu tindakan sederhana yang dapat kamu lakukan hari ini untuk merawat kehidupan di sekitarmu?</p></div>
+ </section>
+ <section class="section" id="fitur">
+  <div class="section-head"><div><div class="eyebrow">Belajar lebih luas</div><h2>Panduan belajar Alkitab</h2><p class="sub">Bagian-bagian yang akan dikembangkan dalam proyek ini.</p></div></div>
+  <div class="featuregrid">
+   <article class="feature"><div class="emoji">🧑‍🤝‍🧑</div><h3>Tokoh Alkitab</h3><p>Mengenal latar belakang, perjalanan, dan peran tokoh-tokoh dalam kisah Alkitab.</p></article>
+   <article class="feature"><div class="emoji">🗺️</div><h3>Sejarah dan latar</h3><p>Mempelajari konteks tempat, budaya, masa, dan peristiwa dengan sumber yang dapat diperiksa.</p></article>
+   <article class="feature"><div class="emoji">📚</div><h3>Kamus Alkitab</h3><p>Memahami istilah, nama, dan konsep penting secara ringkas.</p></article>
+  </div>
+ </section>
+ <section class="section">
+  <div class="contentnote"><b>Catatan sumber dan hak cipta:</b> Situs ini menggunakan TB LAI sebagai referensi bacaan. Ringkasan dan refleksi ditulis dengan kata-kata sendiri. Teks lengkap terjemahan TB tidak disalin ke situs ini. Untuk kutipan teks TB, penggunaan harus mengikuti ketentuan dan izin dari LAI.</div>
+ </section>
 
-<main class="container" id="alkitab">
-
-    <h2>Jelajahi Alkitab</h2>
-
-    <div class="card">
-        <h3>Perjanjian Lama</h3>
-        <p>39 kitab dari Kejadian sampai Maleakhi.</p>
-    </div>
-
-    <div class="card">
-        <h3>Perjanjian Baru</h3>
-        <p>27 kitab dari Matius sampai Wahyu.</p>
-    </div>
-
-    <div class="card" id="renungan">
-        <h3>Renungan Harian</h3>
-        <p>Belajar memahami pesan Alkitab setiap hari.</p>
-    </div>
-
+ <section class="section page-extra" id="tokohPage">
+  <div class="section-head"><div><div class="eyebrow">Mengenal pribadi dalam Alkitab</div><h2>Tokoh Alkitab</h2><p class="sub">Pilih tokoh untuk membaca pengenalan singkat dan pelajaran yang dapat direnungkan.</p></div></div>
+  <div class="featuregrid" id="characterGrid"></div>
+  <div class="panel" id="characterDetail" style="margin-top:16px"><h3>Pilih tokoh Alkitab</h3><p class="sub">Informasi tokoh akan muncul di sini.</p></div>
+ </section>
+ <section class="section page-extra" id="kamusPage">
+  <div class="section-head"><div><div class="eyebrow">Istilah dan makna</div><h2>Kamus Alkitab</h2><p class="sub">Cari istilah untuk melihat penjelasan ringkas.</p></div></div>
+  <input class="search" id="dictionarySearch" type="search" placeholder="Cari istilah, misalnya perjanjian, iman, atau Injil...">
+  <div class="featuregrid" id="dictionaryGrid" style="margin-top:16px"></div>
+ </section>
 </main>
+<footer><b>Perpustakaan Digital Alkitab</b><p>Belajar • Memahami • Merenungkan</p><p>Proyek belajar Alkitab yang dikembangkan secara bertahap.</p></footer>
+<div class="modalback" id="modalBack" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+ <div class="modal"><div class="modalhead"><h3 id="modalTitle">Nama Kitab</h3><button class="close" id="closeModal" aria-label="Tutup">✕</button></div><p id="modalMeta" class="sub"></p><p id="modalIntro"></p><b>Pilih pasal</b><div class="chapterrow" id="chapterList"></div><div class="contentnote" id="chapterMessage">Pilih pasal untuk melihat status konten. Ringkasan lengkap akan ditambahkan bertahap setelah ditelaah.</div></div>
+</div>
+<script>
+const books = [
+["Kejadian",50,"old"],["Keluaran",40,"old"],["Imamat",27,"old"],["Bilangan",36,"old"],["Ulangan",34,"old"],["Yosua",24,"old"],["Hakim-hakim",21,"old"],["Rut",4,"old"],["1 Samuel",31,"old"],["2 Samuel",24,"old"],["1 Raja-raja",22,"old"],["2 Raja-raja",25,"old"],["1 Tawarikh",29,"old"],["2 Tawarikh",36,"old"],["Ezra",10,"old"],["Nehemia",13,"old"],["Ester",10,"old"],["Ayub",42,"old"],["Mazmur",150,"old"],["Amsal",31,"old"],["Pengkhotbah",12,"old"],["Kidung Agung",8,"old"],["Yesaya",66,"old"],["Yeremia",52,"old"],["Ratapan",5,"old"],["Yehezkiel",48,"old"],["Daniel",12,"old"],["Hosea",14,"old"],["Yoel",3,"old"],["Amos",9,"old"],["Obaja",1,"old"],["Yunus",4,"old"],["Mikha",7,"old"],["Nahum",3,"old"],["Habakuk",3,"old"],["Zefanya",3,"old"],["Hagai",2,"old"],["Zakharia",14,"old"],["Maleakhi",4,"old"],
+["Matius",28,"new"],["Markus",16,"new"],["Lukas",24,"new"],["Yohanes",21,"new"],["Kisah Para Rasul",28,"new"],["Roma",16,"new"],["1 Korintus",16,"new"],["2 Korintus",13,"new"],["Galatia",6,"new"],["Efesus",6,"new"],["Filipi",4,"new"],["Kolose",4,"new"],["1 Tesalonika",5,"new"],["2 Tesalonika",3,"new"],["1 Timotius",6,"new"],["2 Timotius",4,"new"],["Titus",3,"new"],["Filemon",1,"new"],["Ibrani",13,"new"],["Yakobus",5,"new"],["1 Petrus",5,"new"],["2 Petrus",3,"new"],["1 Yohanes",5,"new"],["2 Yohanes",1,"new"],["3 Yohanes",1,"new"],["Yudas",1,"new"],["Wahyu",22,"new"]
+];
+const intros = {
+"Kejadian":"Kitab pembuka Alkitab yang memuat kisah penciptaan, awal kehidupan manusia, kejatuhan manusia, air bah, dan para leluhur Israel.",
+"Keluaran":"Mengisahkan pembebasan bangsa Israel dari perbudakan di Mesir dan perjalanan menuju perjanjian dengan Allah.",
+"Mazmur":"Kumpulan puisi, doa, ratapan, dan pujian yang mengungkapkan berbagai pengalaman iman.",
+"Matius":"Salah satu Injil yang menyajikan kehidupan dan pengajaran Yesus Kristus.",
+"Markus":"Injil yang menyampaikan pelayanan, tindakan, penderitaan, kematian, dan kebangkitan Yesus.",
+"Lukas":"Injil yang menyajikan kisah Yesus dengan perhatian pada karya keselamatan dan berbagai kelompok masyarakat.",
+"Yohanes":"Injil yang menekankan identitas Yesus dan mengajak pembaca percaya kepada-Nya.",
+"Wahyu":"Kitab apokaliptik yang memuat penglihatan, penghiburan, peringatan, dan pengharapan."
+};
+let currentFilter="all";
+const grid=document.getElementById("bookGrid"), search=document.getElementById("search");
+function renderBooks(){
+ const q=search.value.toLowerCase().trim();
+ const filtered=books.filter(b=>(currentFilter==="all"||b[2]===currentFilter)&&b[0].toLowerCase().includes(q));
+ grid.innerHTML="";
+ if(!filtered.length){grid.innerHTML='<div class="empty">Kitab tidak ditemukan. Coba kata kunci lain.</div>';return;}
+ filtered.forEach(b=>{const el=document.createElement("button");el.className="bookcard";el.innerHTML=`<b>${b[0]}</b><small>${b[1]} pasal · ${b[2]==="old"?"Perjanjian Lama":"Perjanjian Baru"}</small>`;el.addEventListener("click",()=>openBook(b));grid.appendChild(el);});
+}
+function openBook(b){
+ document.getElementById("modalTitle").textContent=b[0];
+ document.getElementById("modalMeta").textContent=`${b[1]} pasal · ${b[2]==="old"?"Perjanjian Lama":"Perjanjian Baru"}`;
+ document.getElementById("modalIntro").textContent=intros[b[0]]||"Pengantar kitab ini akan disusun dan dilengkapi secara bertahap dengan memperhatikan konteks sejarah, sastra, dan pesan kitab.";
+ const list=document.getElementById("chapterList");list.innerHTML="";
+ for(let i=1;i<=b[1];i++){const btn=document.createElement("button");btn.className="chapter";btn.textContent=i;btn.addEventListener("click",()=>{document.querySelectorAll(".chapter").forEach(x=>x.classList.remove("active"));btn.classList.add("active");document.getElementById("chapterMessage").textContent=(b[0]==="Kejadian"&&i===1)?"Kejadian 1: contoh ringkasan tersedia pada bagian “Mulai memahami pasal” di halaman utama. Konten ini merupakan ringkasan orisinal; silakan baca teks TB LAI untuk keseluruhan pasal.":`${b[0]} ${i}: halaman pasal telah disiapkan dalam struktur perpustakaan. Ringkasan dan refleksi pasal ini akan ditambahkan setelah proses penulisan dan pemeriksaan.`;});list.appendChild(btn);}
+ document.getElementById("modalBack").classList.add("show");
+}
+search.addEventListener("input",renderBooks);
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");currentFilter=t.dataset.filter;renderBooks();}));
+document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modalBack").classList.remove("show"));
+document.getElementById("modalBack").addEventListener("click",e=>{if(e.target.id==="modalBack")e.currentTarget.classList.remove("show");});
 
-<footer>
-    <p>Perpustakaan Digital Alkitab</p>
-    <p>Belajar • Memahami • Merenungkan</p>
-    <p>© 2026</p>
-</footer>
+document.getElementById("menuBtn").addEventListener("click",()=>document.getElementById("nav").classList.toggle("open"));
 
+/* Navigasi satu halaman: konten berganti tanpa membuka halaman baru. */
+const homeHero=document.querySelector(".hero");
+const mainEl=document.querySelector("main");
+const statsEl=mainEl.querySelector(".stats");
+const pageSections=["alkitab","detail","renungan","fitur","tokohPage","kamusPage"]
+ .map(id=>document.getElementById(id));
+function showPage(page){
+  homeHero.style.display = page==="beranda" ? "" : "none";
+  statsEl.style.display = page==="beranda" ? "" : "none";
+  pageSections.forEach(s=>s.style.display="none");
+  if(page==="beranda"){
+    document.getElementById("detail").style.display="";
+    document.getElementById("fitur").style.display="";
+  } else if(page==="alkitab"){
+    document.getElementById("alkitab").style.display="";
+  } else if(page==="renungan"){
+    document.getElementById("renungan").style.display="";
+  } else if(page==="tokoh"){
+    document.getElementById("tokohPage").style.display="";
+  } else if(page==="kamus"){
+    document.getElementById("kamusPage").style.display="";
+  }
+  document.querySelectorAll("[data-page]").forEach(a=>{
+    a.classList.toggle("active",a.dataset.page===page);
+  });
+  document.getElementById("nav").classList.remove("open");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll("[data-page]").forEach(a=>{
+  a.addEventListener("click",e=>{
+    e.preventDefault();
+    showPage(a.dataset.page);
+  });
+});
+
+/* Ringkasan contoh: konten ditulis ulang dengan kata-kata sendiri. */
+function showChapter(bookName, chapter){
+  const message=document.getElementById("chapterMessage");
+  const modalTitle=document.getElementById("modalTitle");
+  modalTitle.textContent=`${bookName} ${chapter}`;
+  if(bookName==="Kejadian" && chapter===1){
+    message.innerHTML=`<h4>Ringkasan Kejadian 1 — Penciptaan</h4>
+      <p>Pasal ini menggambarkan Allah menciptakan langit dan bumi serta menata kehidupan secara bertahap. Terang, cakrawala, daratan, tumbuhan, benda-benda penerang, hewan, dan manusia hadir dalam susunan yang teratur.</p>
+      <h4>Pokok penting</h4><ul><li>Allah adalah sumber dan pencipta kehidupan.</li><li>Ciptaan digambarkan memiliki keteraturan dan nilai.</li><li>Manusia menerima tanggung jawab untuk memelihara ciptaan.</li></ul>
+      <h4>Pertanyaan refleksi</h4><p>Bagaimana kamu dapat menghargai kehidupan dan merawat lingkungan hari ini?</p>
+      <p class="sub">Ringkasan orisinal, bukan pengganti teks Alkitab. Bacalah Kejadian 1 dalam TB LAI untuk konteks lengkap.</p>`;
+  } else {
+    message.innerHTML=`<h4>${bookName} ${chapter}</h4>
+      <p>Ringkasan untuk pasal ini belum tersedia. Bagian ini sudah disiapkan agar ringkasan dapat ditambahkan setelah ditulis dan diperiksa berdasarkan teks Alkitab serta konteksnya.</p>
+      <p class="sub">Untuk sementara, silakan baca pasal ${chapter} dalam Alkitab TB LAI. Situs ini tidak menyalin teks lengkap terjemahan.</p>`;
+  }
+}
+function openBook(b){
+ document.getElementById("modalTitle").textContent=b[0];
+ document.getElementById("modalMeta").textContent=`${b[1]} pasal · ${b[2]==="old"?"Perjanjian Lama":"Perjanjian Baru"}`;
+ document.getElementById("modalIntro").textContent=intros[b[0]]||"Pengantar kitab ini akan disusun dan dilengkapi secara bertahap dengan memperhatikan konteks sejarah, sastra, dan pesan kitab.";
+ const list=document.getElementById("chapterList");list.innerHTML="";
+ document.getElementById("chapterMessage").textContent="Pilih nomor pasal untuk melihat ringkasan atau status kontennya.";
+ for(let i=1;i<=b[1];i++){
+   const btn=document.createElement("button");btn.className="chapter";btn.textContent=i;
+   btn.addEventListener("click",()=>{
+     document.querySelectorAll(".chapter").forEach(x=>x.classList.remove("active"));
+     btn.classList.add("active");showChapter(b[0],i);
+   });
+   list.appendChild(btn);
+ }
+ document.getElementById("modalBack").classList.add("show");
+}
+
+/* Kartu tokoh dan kamus dibuat interaktif. */
+const characters=[
+ ["Adam","Manusia pertama dalam kisah penciptaan. Kisahnya mengajak pembaca merenungkan tanggung jawab, pilihan, dan hubungan manusia dengan Allah."],
+ ["Hawa","Tokoh perempuan dalam kisah awal Kejadian. Kisahnya berkaitan dengan kehidupan, pilihan, dan konsekuensi."],
+ ["Nuh","Tokoh yang digambarkan membangun bahtera ketika menghadapi air bah. Kisahnya menyoroti ketaatan dan pemeliharaan."],
+ ["Abraham","Leluhur Israel yang menerima panggilan untuk meninggalkan tempat asal dan berjalan dalam janji Allah."],
+ ["Musa","Pemimpin yang memimpin bangsa Israel keluar dari Mesir dan menerima hukum bagi umat."],
+ ["Rut","Perempuan Moab yang menunjukkan kesetiaan kepada Naomi dan menjadi bagian dari garis keluarga Daud."],
+ ["Daud","Raja Israel yang dikenal sebagai pemimpin dan tokoh dalam banyak mazmur."],
+ ["Ester","Ratu yang mengambil risiko untuk membela bangsanya."],
+ ["Maria","Ibu Yesus dalam kisah Injil, yang menerima peran penting dalam kisah kelahiran-Nya."],
+ ["Petrus","Salah satu murid Yesus yang tampil menonjol dalam kisah Injil dan gereja mula-mula."],
+ ["Paulus","Pemberita Injil dan penulis sejumlah surat dalam Perjanjian Baru."]
+];
+const characterGrid=document.getElementById("characterGrid");
+characters.forEach(([name,desc])=>{
+ const card=document.createElement("button");card.className="feature clickable";card.type="button";
+ card.innerHTML=`<div class="emoji">👤</div><h3>${name}</h3><p>Ketuk untuk mengenal tokoh</p>`;
+ card.addEventListener("click",()=>{document.getElementById("characterDetail").innerHTML=`<span class="pill">TOKOH ALKITAB</span><h3>${name}</h3><p>${desc}</p>`;});
+ characterGrid.appendChild(card);
+});
+const terms=[
+ ["Perjanjian","Kesepakatan atau ikatan yang membentuk hubungan dan tanggung jawab antara pihak-pihak."],
+ ["Iman","Kepercayaan dan kesetiaan kepada Allah yang tercermin dalam sikap serta tindakan."],
+ ["Injil","Kabar baik tentang karya Allah melalui Yesus Kristus; juga nama bagi empat kitab pertama Perjanjian Baru."],
+ ["Kasih","Sikap mengutamakan kebaikan dan kesejahteraan sesama, bukan sekadar perasaan."],
+ ["Anugerah","Pemberian atau kebaikan yang diterima bukan karena jasa penerimanya."],
+ ["Pertobatan","Perubahan arah hidup, pikiran, dan tindakan untuk kembali kepada Allah."],
+ ["Roh Kudus","Pribadi ilahi yang dalam iman Kristen berkarya menolong, membimbing, dan menguatkan umat."],
+ ["Rasul","Utusan yang diberi tugas untuk menyampaikan berita atau menjalankan misi."]
+];
+const dictionaryGrid=document.getElementById("dictionaryGrid");
+function renderDictionary(){
+ const q=document.getElementById("dictionarySearch").value.toLowerCase().trim();
+ dictionaryGrid.innerHTML="";
+ const found=terms.filter(([term,desc])=>(term+" "+desc).toLowerCase().includes(q));
+ if(!found.length){dictionaryGrid.innerHTML='<div class="empty">Istilah belum ditemukan.</div>';return;}
+ found.forEach(([term,desc])=>{
+  const card=document.createElement("article");card.className="feature";
+  card.innerHTML=`<h3>${term}</h3><p>${desc}</p>`;
+  dictionaryGrid.appendChild(card);
+ });
+}
+document.getElementById("dictionarySearch").addEventListener("input",renderDictionary);
+
+/* Kartu panduan di beranda dapat membuka bagian terkait. */
+const featureCards=document.querySelectorAll("#fitur .feature");
+if(featureCards[0]){featureCards[0].classList.add("clickable");featureCards[0].addEventListener("click",()=>showPage("tokoh"));}
+if(featureCards[2]){featureCards[2].classList.add("clickable");featureCards[2].addEventListener("click",()=>showPage("kamus"));}
+
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+ t.classList.add("active");currentFilter=t.dataset.filter;renderBooks();
+}));
+document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modalBack").classList.remove("show"));
+document.getElementById("modalBack").addEventListener("click",e=>{if(e.target.id==="modalBack")e.currentTarget.classList.remove("show");});
+renderBooks();
+renderDictionary();
+showPage("beranda");
+</script>
 </body>
-</html>
+                                                     </html>
