@@ -70,6 +70,9 @@ footer p{margin:5px;color:#e0d4c4;font-size:13px}
 #characterGrid .feature small { display:block; margin-top:8px; line-height:1.5; }
 #characterDetail { line-height:1.7; }
 #characterDetail h4, .chapter-reading h4 { margin:18px 0 6px; }
+#characterGrid .character-detail-inline { grid-column:1 / -1; margin:0 0 12px; animation:detailIn .22s ease-out; }
+#characterGrid .character-detail-inline h3 { margin-top:8px; }
+@keyframes detailIn { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
 .chapter-reading { line-height:1.75; }
 .chapter-reading .sub { margin-top:18px; }
 #dictionaryGrid .feature { text-align:left; }
@@ -173,7 +176,6 @@ footer p{margin:5px;color:#e0d4c4;font-size:13px}
  <section class="section page-extra" id="tokohPage">
   <div class="section-head"><div><div class="eyebrow">Mengenal pribadi dalam Alkitab</div><h2>Tokoh Alkitab</h2><p class="sub">Pilih tokoh untuk membaca pengenalan singkat dan pelajaran yang dapat direnungkan.</p></div></div>
   <div class="featuregrid" id="characterGrid"></div>
-  <div class="panel" id="characterDetail" style="margin-top:16px"><h3>Pilih tokoh Alkitab</h3><p class="sub">Informasi tokoh akan muncul di sini.</p></div>
  </section>
  <section class="section page-extra" id="kamusPage">
   <div class="section-head"><div><div class="eyebrow">Istilah dan makna</div><h2>Kamus Alkitab</h2><p class="sub">Cari istilah untuk melihat penjelasan ringkas.</p></div></div>
@@ -325,27 +327,26 @@ const genesisSummaries = {"1": ["Allah menciptakan alam semesta dan seluruh isin
 function showChapter(bookName, chapter){
   const message=document.getElementById("chapterMessage");
   document.getElementById("modalTitle").textContent=`${bookName} ${chapter}`;
-  if(bookName==="Kejadian" && genesisSummaries[chapter]){
-    const item=genesisSummaries[chapter];
+  const item=(bookName==="Kejadian") ? genesisSummaries[chapter] : null;
+  const book=books.find(b=>b[0]===bookName);
+  const intro=intros[bookName] || `Kitab ${bookName} merupakan bagian dari Perjanjian ${book && book[2]==="old" ? "Lama" : "Baru"}.`;
+  if(item){
     message.innerHTML=`<div class="chapter-reading">
       <span class="pill">RINGKASAN PASAL</span>
-      <h4>${bookName} ${chapter}</h4>
-      <p>${item[0]}</p>
+      <h4>${bookName} ${chapter}</h4><p>${item[0]}</p>
+      <h4>Pokok yang dapat diperhatikan</h4><ul><li>${item[1]}</li><li>Perhatikan hubungan peristiwa dalam pasal ini dengan bagian sebelum dan sesudahnya.</li></ul>
       <h4>Pesan untuk direnungkan</h4><p>${item[1]}</p>
-      <h4>Pertanyaan refleksi</h4><p>Apa yang paling menarik dari pasal ini? Bagaimana pesan tersebut dapat diterapkan dalam kehidupan sehari-hari?</p>
+      <h4>Pertanyaan refleksi</h4><p>Apa yang paling menarik dari pasal ini? Bagaimana pesannya dapat diterapkan dalam kehidupan sehari-hari?</p>
       <p class="sub">Ringkasan ditulis dengan kata-kata sendiri dan bukan pengganti pembacaan Alkitab. Bacalah teks TB LAI untuk memahami keseluruhan pasal.</p>
     </div>`;
   } else {
-    const book = books.find(b=>b[0]===bookName);
-    const intro = intros[bookName] || `Kitab ${bookName} merupakan bagian dari Perjanjian ${book && book[2]==="old" ? "Lama" : "Baru"}.`;
     message.innerHTML=`<div class="chapter-reading">
-      <span class="pill">PANDUAN MEMBACA</span>
-      <h4>${bookName} ${chapter}</h4>
-      <p>${intro}</p>
-      <h4>Saat membaca pasal ini</h4>
-      <ul><li>Perhatikan siapa saja tokoh yang muncul dan apa yang mereka lakukan.</li><li>Catat peristiwa, perintah, janji, atau pertanyaan penting.</li><li>Amati hubungan pasal ini dengan bagian sebelum dan sesudahnya.</li></ul>
-      <h4>Pertanyaan refleksi</h4><p>Apa yang pasal ini ajarkan tentang Allah, manusia, dan kehidupan? Apa satu hal yang dapat kamu renungkan atau lakukan?</p>
-      <p class="sub">Ringkasan khusus untuk pasal ini sedang disusun dan akan ditambahkan setelah ditelaah. Bagian ini adalah panduan membaca, bukan ringkasan isi pasal. Bacalah teks TB LAI untuk konteks lengkap.</p>
+      <span class="pill">PANDUAN MEMBACA PASAL</span>
+      <h4>${bookName} ${chapter}</h4><p>${intro}</p>
+      <h4>Pokok yang dapat diperhatikan</h4><ul><li>Siapa tokoh utama dan apa yang sedang terjadi?</li><li>Perhatikan peristiwa, ajaran, janji, perintah, atau pertanyaan penting.</li><li>Amati hubungan pasal ini dengan bagian sebelum dan sesudahnya.</li></ul>
+      <h4>Pesan untuk direnungkan</h4><p>Catat pesan yang kamu temukan setelah membaca pasal ini. Pertimbangkan apa yang disampaikan tentang Allah, manusia, iman, dan kehidupan.</p>
+      <h4>Pertanyaan refleksi</h4><p>Apa satu hal yang kamu pelajari dari pasal ini, dan bagaimana kamu dapat menerapkannya hari ini?</p>
+      <p class="sub">Ringkasan khusus pasal ini belum tersedia dan sedang disusun. Bagian ini adalah panduan membaca dengan format yang sama, bukan ringkasan isi pasal. Bacalah teks TB LAI untuk konteks lengkap.</p>
     </div>`;
   }
 }
@@ -375,9 +376,15 @@ characters.forEach(([name,role,refs,story,lesson])=>{
  const card=document.createElement("button");card.className="feature clickable";card.type="button";
  card.innerHTML=`<div class="emoji">👤</div><h3>${name}</h3><p>${role}</p><small class="sub">Bacaan: ${refs}</small>`;
  card.addEventListener("click",()=>{
-   document.getElementById("characterDetail").innerHTML=`<span class="pill">TOKOH ALKITAB</span><h3>${name}</h3><p><b>Peran:</b> ${role}</p><p><b>Kisah singkat:</b> ${story}</p><p><b>Referensi:</b> ${refs}</p><h4>Pelajaran untuk direnungkan</h4><p>${lesson}</p>`;
-   document.getElementById("characterDetail").scrollIntoView({behavior:"smooth",block:"nearest"});
+   characterGrid.querySelectorAll(".character-detail-inline").forEach(panel=>panel.remove());
+   characterGrid.querySelectorAll(".feature.clickable").forEach(item=>item.setAttribute("aria-expanded","false"));
+   const detail=document.createElement("div");
+   detail.className="panel character-detail-inline";
+   detail.innerHTML=`<span class="pill">TOKOH ALKITAB</span><h3>${name}</h3><p><b>Peran:</b> ${role}</p><p><b>Kisah singkat:</b> ${story}</p><p><b>Referensi:</b> ${refs}</p><h4>Pelajaran untuk direnungkan</h4><p>${lesson}</p>`;
+   card.insertAdjacentElement("afterend",detail);
+   card.setAttribute("aria-expanded","true");
  });
+ card.setAttribute("aria-expanded","false");
  characterGrid.appendChild(card);
 });
 
@@ -412,4 +419,4 @@ renderDictionary();
 showPage("beranda");
 </script>
 </body>
-                                                                             </html>
+</html>
