@@ -59,7 +59,16 @@ h2{font-family:Georgia,serif;font-size:30px;font-weight:600;margin:0 0 4px}
 footer{background:#493b2d;color:#f8f1e6;padding:30px 20px;text-align:center}
 footer p{margin:5px;color:#e0d4c4;font-size:13px}
 .modalback{position:fixed;inset:0;background:#1e1914a8;display:none;align-items:center;justify-content:center;padding:18px;z-index:30}
-.modalback.show{display:flex}.modal{background:var(--paper);border-radius:20px;padding:24px;max-width:520px;width:100%;max-height:85vh;overflow:auto}
+.modalback.show{display:flex}.modal{background:var(--paper);border-radius:20px;padding:24px;max-width:760px;width:100%;max-height:88vh;overflow:auto}
+.chapter-detail{display:block;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:18px;scroll-margin:18px;}
+.chapter-detail:empty{display:none}
+.chapter-detail .chapter-reading{line-height:1.75}
+.chapter-detail .chapter-reading h4:first-of-type{margin-top:12px}
+.chapter-detail .chapter-reading h4{color:var(--brown);font-size:15px}
+.chapter-detail .chapter-reading p{margin:7px 0;color:#594e43}
+.chapter-detail .chapter-reading ul{padding-left:20px;color:#594e43}
+.chapter-detail .sub{font-size:12px;color:var(--muted)}
+.chapter-selection-label{font-size:13px;font-weight:700;color:var(--brown);margin-top:18px;display:block}
 .modalhead{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:#eee7dd;border-radius:50%;width:34px;height:34px;cursor:pointer}
 .empty{color:var(--muted);padding:20px;text-align:center;grid-column:1/-1}
 @media(max-width:760px){nav{display:none;position:absolute;top:62px;left:0;right:0;background:var(--paper);padding:16px 20px;flex-direction:column;border-bottom:1px solid var(--line)}nav.open{display:flex}.menu{display:block}.hero-inner{grid-template-columns:1fr}.hero-art{min-height:150px}.book{font-size:65px}.bookgrid{grid-template-columns:repeat(2,1fr)}.featuregrid{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:13px 6px}.stat strong{font-size:23px}main{padding-top:30px}.section-head{align-items:start;flex-direction:column}}
@@ -185,7 +194,8 @@ footer p{margin:5px;color:#e0d4c4;font-size:13px}
 </main>
 <footer><b>Perpustakaan Digital Alkitab</b><p>Belajar • Memahami • Merenungkan</p><p>Ringkasan dan bahan belajar orisinal yang dikembangkan serta ditelaah secara bertahap.</p></footer>
 <div class="modalback" id="modalBack" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
- <div class="modal"><div class="modalhead"><h3 id="modalTitle">Nama Kitab</h3><button class="close" id="closeModal" aria-label="Tutup">✕</button></div><p id="modalMeta" class="sub"></p><p id="modalIntro"></p><b>Pilih pasal</b><div class="chapterrow" id="chapterList"></div><div class="contentnote" id="chapterMessage">Pilih pasal untuk melihat status konten. Ringkasan lengkap akan ditambahkan bertahap setelah ditelaah.</div></div>
+ <div class="modal"><div class="modalhead"><h3 id="modalTitle">Nama Kitab</h3><button class="close" id="closeModal" aria-label="Tutup">✕</button></div><p id="modalMeta" class="sub"></p><p id="modalIntro"></p><b>Pilih pasal</b><div class="chapterrow" id="chapterList"></div><span class="chapter-selection-label">Pembahasan pasal yang dipilih</span>
+ <div class="chapter-detail" id="chapterMessage" aria-live="polite">Pilih nomor pasal. Pembahasan akan muncul di sini, tepat di bawah daftar nomor pasal.</div></div>
 </div>
 <script>
 const books = [
@@ -281,8 +291,27 @@ const list=item.steps.map(step=>`<li>${step}</li>`).join("");
 devotionalContent.innerHTML=`<div class="devotional-meta"><span class="pill">${item.category}</span><span>${formatDate(selectedDevotionalDate)}</span>${selectedDevotionalDate===localDateKey(new Date())?'<span class="pill">RENUNGAN HARI INI</span>':'<span class="pill">ARSIP RENUNGAN</span>'}</div><h3>${item.title}</h3><div class="verse-ref"><strong>Ayat utama · ${item.verse}</strong><span>Bacalah bagian Alkitab ini dalam TB LAI, lalu renungkan pesan dan konteksnya.</span></div><h4>Makna renungan</h4><p>${item.explanation}</p><h4>Ilustrasi kehidupan sehari-hari</h4><p>${item.story}</p><h4>Penerapan praktis</h4><ul>${list}</ul><div class="prayer"><h4 style="margin-top:0">Doa penutup</h4><p>${item.prayer}</p></div><h4>Pertanyaan refleksi</h4><p>${item.question}</p>`;
 loadJournal();}
 function journalKey(){return `pda-journal-${selectedDevotionalDate}`;}
-function loadJournal(){try{journalEntry.value=localStorage.getItem(journalKey())||"";journalStatus.textContent="Catatan tersimpan di browser perangkat ini.";}catch(e){journalEntry.value="";journalStatus.textContent="Penyimpanan tidak tersedia di browser ini.";}}
-document.getElementById("saveJournal").addEventListener("click",()=>{try{localStorage.setItem(journalKey(),journalEntry.value);journalStatus.textContent="Jurnal berhasil disimpan di perangkat ini.";}catch(e){journalStatus.textContent="Maaf, browser tidak mengizinkan penyimpanan jurnal.";}});
+function loadJournal(){
+  try{
+    const saved=localStorage.getItem(journalKey());
+    journalEntry.value=saved===null?"":saved;
+    journalStatus.textContent=saved===null?"Belum ada catatan tersimpan untuk tanggal ini.":"Jurnal untuk tanggal ini berhasil dimuat.";
+  }catch(e){
+    journalEntry.value="";
+    journalStatus.textContent="Penyimpanan tidak tersedia. Buka website melalui GitHub Pages dan izinkan penyimpanan browser.";
+  }
+}
+journalEntry.addEventListener("input",()=>{journalStatus.textContent="Ada perubahan yang belum disimpan. Tekan tombol Simpan jurnal.";});
+document.getElementById("saveJournal").addEventListener("click",()=>{
+  try{
+    localStorage.setItem(journalKey(),journalEntry.value);
+    const verification=localStorage.getItem(journalKey());
+    if(verification!==journalEntry.value) throw new Error("Verifikasi penyimpanan gagal");
+    journalStatus.textContent=`Jurnal berhasil disimpan untuk ${formatDate(selectedDevotionalDate)}. Catatan akan muncul kembali saat tanggal renungan ini dibuka di browser yang sama.`;
+  }catch(e){
+    journalStatus.textContent="Jurnal belum tersimpan. Pastikan website dibuka melalui GitHub Pages dan penyimpanan browser tidak diblokir.";
+  }
+});
 archiveSelect.addEventListener("change",()=>{selectedDevotionalDate=archiveSelect.value;selectedCategory="Semua";renderCategoryButtons();renderDevotional();});
 renderCategoryButtons();renderArchive();renderDevotional();
 
@@ -326,37 +355,40 @@ document.querySelectorAll("[data-page]").forEach(a=>{
 const genesisSummaries = {"1": ["Allah menciptakan alam semesta dan seluruh isinya dengan teratur. Manusia diciptakan menurut gambar Allah dan diberi tanggung jawab atas bumi.", "Allah adalah sumber kehidupan; manusia dipanggil untuk menghargai sesama dan merawat ciptaan."], "2": ["Kisah penciptaan berfokus pada manusia, taman Eden, pekerjaan yang dipercayakan kepadanya, serta terbentuknya hubungan laki-laki dan perempuan.", "Kehidupan, pekerjaan, dan relasi manusia memiliki tempat dalam rancangan Allah."], "3": ["Ular menggoda manusia untuk melanggar perintah Allah. Ketidaktaatan membawa rasa malu, keretakan relasi, dan konsekuensi, tetapi kisah ini juga memuat harapan.", "Pilihan memiliki akibat; kejujuran dan ketaatan penting dalam hubungan dengan Allah."], "4": ["Kain iri kepada Habel dan membunuh saudaranya. Allah menegur Kain; keturunan manusia kemudian berkembang dengan berbagai keterampilan dan persoalan.", "Iri hati yang dibiarkan dapat berkembang menjadi tindakan yang merusak."], "5": ["Silsilah dari Adam sampai Nuh mencatat generasi demi generasi dan menekankan perjalanan panjang umat manusia.", "Kesetiaan dan kehidupan manusia berlangsung lintas generasi."], "6": ["Kejahatan manusia semakin besar. Nuh mendapat perhatian khusus karena hidup benar pada zamannya dan diperintahkan membuat bahtera.", "Di tengah kerusakan, Nuh memberi teladan untuk tetap hidup benar."], "7": ["Nuh, keluarganya, dan berbagai jenis hewan masuk ke bahtera. Air bah melanda bumi sebagaimana yang telah diperingatkan.", "Kisah ini menekankan keseriusan peringatan dan perlindungan bagi Nuh sekeluarga."], "8": ["Air mulai surut. Nuh mengutus burung untuk mengetahui keadaan bumi, lalu keluar dari bahtera dan mempersembahkan korban syukur.", "Setelah masa sulit, syukur dan kesabaran tetap penting."], "9": ["Allah menetapkan perjanjian dengan Nuh dan memberikan pelangi sebagai tanda. Bagian akhir pasal menceritakan peristiwa dalam keluarga Nuh.", "Perjanjian mengingatkan pembaca pada kesetiaan Allah dan tanggung jawab menghormati kehidupan."], "10": ["Silsilah keturunan anak-anak Nuh menggambarkan penyebaran berbagai bangsa dan kelompok manusia.", "Keberagaman bangsa-bangsa memiliki akar dalam sejarah umat manusia yang saling terhubung."], "11": ["Manusia membangun menara Babel dan bahasanya dikacaukan. Pasal kemudian mencatat garis keturunan yang mengarah kepada Abram.", "Kesombongan manusia dapat memecah persatuan; kisah Abram mulai membuka babak baru."], "12": ["Abram dipanggil meninggalkan negeri dan keluarganya menuju tempat yang akan ditunjukkan Allah. Ia tiba di Kanaan, lalu pergi ke Mesir saat kelaparan.", "Iman Abram terlihat dalam kesediaan melangkah meski masa depan belum sepenuhnya diketahui."], "13": ["Abram dan Lot berpisah karena tanah tidak cukup untuk ternak mereka. Lot memilih wilayah dekat Sodom, sedangkan Abram tinggal di Kanaan.", "Mengusahakan perdamaian kadang berarti rela mengalah dan tidak memaksakan hak."], "14": ["Abram menyelamatkan Lot setelah terjadi peperangan antar-raja. Melkisedek memberkati Abram, dan Abram menolak mengambil keuntungan dari raja Sodom.", "Keberanian menolong dan integritas dalam menggunakan harta menjadi sorotan."], "15": ["Allah meneguhkan janji kepada Abram tentang keturunan dan tanah. Perjanjian digambarkan melalui upacara yang menegaskan komitmen Allah.", "Janji Allah menjadi dasar pengharapan ketika penggenapannya belum terlihat."], "16": ["Sarai memberikan Hagar kepada Abram; Hagar kemudian melahirkan Ismael. Kisah ini memperlihatkan konflik dan penderitaan dalam keluarga.", "Keputusan yang diambil karena tidak sabar dapat melukai banyak orang."], "17": ["Nama Abram diubah menjadi Abraham dan Sarai menjadi Sara. Allah meneguhkan perjanjian serta menjanjikan kelahiran Ishak.", "Identitas dan masa depan Abraham ditempatkan dalam janji perjanjian."], "18": ["Tiga tamu mengunjungi Abraham dan menyampaikan janji kelahiran anak. Abraham juga memohon agar Sodom tidak dimusnahkan jika masih ada orang benar.", "Keramahan dan kepedulian terhadap orang lain menjadi teladan Abraham."], "19": ["Dua malaikat datang ke Sodom dan Lot melindungi mereka. Kota itu dihancurkan; Lot dan keluarganya diselamatkan, tetapi kisah berakhir tragis.", "Pasal ini memperingatkan tentang kejahatan, sekaligus mengajak pembaca merenungkan belas kasih dan keadilan."], "20": ["Abraham tinggal di Gerar dan kembali menyebut Sara sebagai saudaranya. Allah melindungi Sara dan menegur Abimelekh melalui mimpi.", "Ketakutan dapat mendorong seseorang bertindak tidak jujur; perlindungan Allah tetap tampak."], "21": ["Ishak lahir sesuai janji. Hagar dan Ismael pergi, tetapi Allah mendengar mereka; Abraham kemudian membuat perjanjian dengan Abimelekh.", "Janji yang lama dinantikan digenapi, dan Allah juga memperhatikan mereka yang tersisih."], "22": ["Allah menguji Abraham dengan meminta Ishak dipersembahkan. Pada saat terakhir Allah menyediakan domba jantan sebagai pengganti.", "Kisah ini menekankan ujian iman dan penyediaan Allah; bukan ajakan untuk melakukan kekerasan."], "23": ["Sara meninggal dan Abraham membeli gua Makhpela sebagai tempat pemakaman keluarga.", "Tindakan Abraham menunjukkan penghormatan kepada Sara dan komitmen terhadap tanah yang dijanjikan."], "24": ["Abraham mengutus hambanya mencari istri bagi Ishak. Ribka bersedia ikut dan kemudian menjadi istri Ishak.", "Doa, kebijaksanaan, keramahan, dan kesediaan mengambil keputusan terlihat dalam kisah ini."], "25": ["Abraham meninggal. Keturunan Ismael dicatat, lalu Esau dan Yakub lahir; Esau menjual hak kesulungannya kepada Yakub.", "Pilihan sesaat dapat berdampak panjang; hubungan saudara juga membutuhkan kebijaksanaan."], "26": ["Ishak tinggal di Gerar, mengalami konflik tentang sumur, dan akhirnya membuat perjanjian damai dengan Abimelekh.", "Ishak berulang kali memilih jalan damai di tengah perselisihan."], "27": ["Yakub, dengan bantuan Ribka, menerima berkat yang semula dimaksudkan bagi Esau. Esau marah dan merencanakan balas dendam.", "Penipuan merusak kepercayaan keluarga dan membawa akibat yang menyakitkan."], "28": ["Yakub berangkat menuju Haran. Dalam mimpi di Betel, ia melihat tangga dan menerima peneguhan janji Allah.", "Di tempat asing dan penuh ketidakpastian, Yakub diingatkan bahwa Allah menyertainya."], "29": ["Yakub tiba di rumah Laban, bekerja untuk menikahi Rahel, tetapi ditipu sehingga lebih dahulu menikahi Lea.", "Kisah ini memperlihatkan bagaimana tipu daya dapat berbalik menimpa pelakunya."], "30": ["Keluarga Yakub bertambah melalui kelahiran anak-anak. Yakub juga membuat kesepakatan upah dengan Laban dan ternaknya berkembang.", "Persaingan keluarga dan kerja keras membentuk perjalanan rumah tangga Yakub."], "31": ["Yakub meninggalkan Laban bersama keluarga dan ternaknya. Setelah perselisihan, Yakub dan Laban membuat perjanjian.", "Keberanian meninggalkan situasi yang tidak sehat perlu disertai upaya menyelesaikan konflik."], "32": ["Yakub bersiap bertemu Esau dan bergumul pada malam hari dengan seorang laki-laki misterius. Namanya diubah menjadi Israel.", "Pertemuan dengan Allah mengubah cara Yakub memahami dirinya dan masa depannya."], "33": ["Yakub bertemu Esau. Alih-alih membalas dendam, Esau menyambutnya dan kedua saudara itu berdamai.", "Pengampunan dan rekonsiliasi dapat membuka jalan bagi hubungan yang dipulihkan."], "34": ["Dina mengalami kekerasan oleh Sikhem. Simeon dan Lewi membalas dengan tipu daya dan pembantaian, yang membawa persoalan besar bagi keluarga.", "Pasal ini memuat kisah kekerasan dan balas dendam; tindakan salah tidak dibenarkan oleh narasi."], "35": ["Yakub kembali ke Betel dan membangun mezbah. Rahel dan Ishak meninggal, sementara keluarga Yakub terus bertambah.", "Perjalanan iman mencakup ibadah, perubahan, kehilangan, dan kesinambungan generasi."], "36": ["Silsilah Esau dan para pemimpin keturunannya dicatat secara rinci.", "Catatan ini menunjukkan perkembangan keturunan Esau sebagai bangsa yang memiliki sejarah sendiri."], "37": ["Yusuf menceritakan mimpi-mimpinya dan dibenci saudara-saudaranya. Mereka menjualnya kepada pedagang, lalu membuat Yakub mengira Yusuf telah mati.", "Iri hati dan kebencian dapat menghancurkan keluarga; kisah Yusuf berlanjut dalam keadaan yang tidak adil."], "38": ["Yehuda dan Tamar mengalami rangkaian peristiwa keluarga yang rumit. Tamar akhirnya memperoleh pengakuan atas haknya.", "Pasal ini menyoroti tanggung jawab, keadilan, dan kegagalan Yehuda memenuhi kewajibannya."], "39": ["Yusuf bekerja di rumah Potifar, menolak godaan istri Potifar, lalu difitnah dan dipenjarakan.", "Integritas Yusuf tetap terlihat meski ia mengalami ketidakadilan."], "40": ["Di penjara, Yusuf menafsirkan mimpi juru minuman dan juru roti Firaun. Tafsirnya terjadi, tetapi ia belum segera diingat kembali.", "Kemampuan dan kesetiaan dapat tetap digunakan bahkan dalam masa menunggu."], "41": ["Yusuf menafsirkan mimpi Firaun tentang tujuh tahun kelimpahan dan tujuh tahun kelaparan. Ia diangkat menjadi penguasa untuk mengelola persediaan.", "Kebijaksanaan perlu diwujudkan dalam perencanaan dan tindakan nyata."], "42": ["Saudara-saudara Yusuf datang ke Mesir membeli gandum. Yusuf mengenali mereka, menguji sikap mereka, dan menahan Simeon.", "Masa lalu keluarga mulai dihadapi; perubahan hati perlu dibuktikan melalui tindakan."], "43": ["Saudara-saudara Yusuf kembali ke Mesir bersama Benyamin. Yusuf menjamu mereka dan memperhatikan Benyamin secara khusus.", "Keluarga Yakub melangkah menuju pemulihan, meski ketegangan belum selesai."], "44": ["Piala Yusuf ditemukan dalam karung Benyamin. Yehuda memohon agar dirinya menggantikan Benyamin supaya ayah mereka tidak semakin menderita.", "Yehuda menunjukkan perubahan melalui kesediaan berkorban demi saudaranya."], "45": ["Yusuf menyatakan identitasnya kepada saudara-saudaranya dan memilih berdamai. Ia mengundang seluruh keluarga pindah ke Mesir.", "Pengampunan Yusuf tidak menghapus kesalahan masa lalu, tetapi membuka jalan bagi pemulihan."], "46": ["Yakub dan keluarganya berangkat ke Mesir. Allah meneguhkan penyertaan-Nya dan keluarga itu menetap di Gosyen.", "Perpindahan besar keluarga Yakub berlangsung dalam keyakinan akan penyertaan Allah."], "47": ["Yusuf mengatur kehidupan selama kelaparan. Yakub bertemu Firaun dan meminta agar kelak dimakamkan di tanah leluhurnya.", "Kebijaksanaan dalam krisis dan kesetiaan pada janji menjadi tema penting."], "48": ["Yakub memberkati Efraim dan Manasye, anak-anak Yusuf, dengan menempatkan yang lebih muda di depan.", "Berkat dan masa depan keluarga tidak selalu mengikuti urutan yang diperkirakan manusia."], "49": ["Yakub memberkati dan menyampaikan perkataan tentang masa depan kedua belas anaknya, lalu meninggal.", "Kata-kata dan keputusan generasi sebelumnya membentuk ingatan serta harapan keluarga."], "50": ["Yusuf menguburkan Yakub di Kanaan dan kembali menegaskan pengampunan kepada saudara-saudaranya. Yusuf meninggal setelah meminta tulangnya kelak dibawa keluar dari Mesir.", "Kisah Kejadian berakhir dengan pengharapan bahwa janji Allah masih akan berlanjut."]};
 function showChapter(bookName, chapter){
   const message=document.getElementById("chapterMessage");
-  document.getElementById("modalTitle").textContent=`${bookName} ${chapter}`;
+  const selectedBook=books.find(b=>b[0]===bookName);
+  document.getElementById("modalTitle").textContent=bookName;
+  document.getElementById("modalMeta").textContent=`Pasal ${chapter} dari ${selectedBook?selectedBook[1]:""}`;
   const item=(bookName==="Kejadian") ? genesisSummaries[chapter] : null;
   const book=books.find(b=>b[0]===bookName);
   const intro=intros[bookName] || `Kitab ${bookName} merupakan bagian dari Perjanjian ${book && book[2]==="old" ? "Lama" : "Baru"}.`;
+  const heading=`${bookName} pasal ${chapter}`;
+  let summary, points, reflection;
   if(item){
-    message.innerHTML=`<div class="chapter-reading">
-      <span class="pill">RINGKASAN PASAL</span>
-      <h4>${bookName} ${chapter}</h4><p>${item[0]}</p>
-      <h4>Pokok yang dapat diperhatikan</h4><ul><li>${item[1]}</li><li>Perhatikan hubungan peristiwa dalam pasal ini dengan bagian sebelum dan sesudahnya.</li></ul>
-      <h4>Pesan untuk direnungkan</h4><p>${item[1]}</p>
-      <h4>Pertanyaan refleksi</h4><p>Apa yang paling menarik dari pasal ini? Bagaimana pesannya dapat diterapkan dalam kehidupan sehari-hari?</p>
-      <p class="sub">Ringkasan ditulis dengan kata-kata sendiri dan bukan pengganti pembacaan Alkitab. Bacalah teks TB LAI untuk memahami keseluruhan pasal.</p>
-    </div>`;
+    summary=item[0];
+    points=`<ul><li>${item[1]}</li><li>Perhatikan hubungan peristiwa dalam pasal ini dengan bagian sebelum dan sesudahnya.</li></ul>`;
+    reflection=item[1];
   } else {
-    message.innerHTML=`<div class="chapter-reading">
-      <span class="pill">PANDUAN MEMBACA PASAL</span>
-      <h4>${bookName} ${chapter}</h4><p>${intro}</p>
-      <h4>Pokok yang dapat diperhatikan</h4><ul><li>Siapa tokoh utama dan apa yang sedang terjadi?</li><li>Perhatikan peristiwa, ajaran, janji, perintah, atau pertanyaan penting.</li><li>Amati hubungan pasal ini dengan bagian sebelum dan sesudahnya.</li></ul>
-      <h4>Pesan untuk direnungkan</h4><p>Catat pesan yang kamu temukan setelah membaca pasal ini. Pertimbangkan apa yang disampaikan tentang Allah, manusia, iman, dan kehidupan.</p>
-      <h4>Pertanyaan refleksi</h4><p>Apa satu hal yang kamu pelajari dari pasal ini, dan bagaimana kamu dapat menerapkannya hari ini?</p>
-      <p class="sub">Ringkasan khusus pasal ini belum tersedia dan sedang disusun. Bagian ini adalah panduan membaca dengan format yang sama, bukan ringkasan isi pasal. Bacalah teks TB LAI untuk konteks lengkap.</p>
-    </div>`;
+    summary=`Ringkasan khusus ${heading} sedang disusun. Sambil menunggu, bacalah pasal ini dalam Alkitab TB LAI dan gunakan panduan di bawah untuk memahami isinya.`;
+    points='<ul><li>Siapa tokoh utama dan apa yang sedang terjadi dalam pasal ini?</li><li>Perhatikan peristiwa, ajaran, janji, perintah, atau pertanyaan penting.</li><li>Amati hubungan pasal ini dengan bagian sebelum dan sesudahnya.</li></ul>';
+    reflection='Setelah membaca pasal ini, catat pesan yang kamu temukan tentang Allah, manusia, iman, dan kehidupan. Pertimbangkan bagaimana pesan itu dapat diterapkan hari ini.';
   }
+  message.innerHTML=`<div class="chapter-reading">
+    <span class="pill">PEMBAHASAN PASAL</span>
+    <h3 style="font:600 25px Georgia,serif;margin:10px 0 14px">${heading}</h3>
+    <h4>Ringkasan</h4><p>${summary}</p>
+    <h4>Pokok yang dapat diperhatikan</h4>${points}
+    <h4>Pesan untuk direnungkan</h4><p>${reflection}</p>
+    <h4>Pertanyaan refleksi</h4><p>Apa hal terpenting yang kamu pelajari dari pasal ini? Bagaimana kamu dapat menerapkannya dalam kehidupan sehari-hari?</p>
+    <p class="sub">Bahan ini ditulis dengan kata-kata sendiri dan bukan pengganti pembacaan Alkitab. Bacalah teks TB LAI untuk memahami keseluruhan pasal. Untuk pasal yang belum memiliki ringkasan khusus, bagian Ringkasan akan diperbarui setelah materi disusun dan ditelaah.</p>
+  </div>`;
+  message.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
-
 function openBook(b){
  document.getElementById("modalTitle").textContent=b[0];
  document.getElementById("modalMeta").textContent=`${b[1]} pasal · ${b[2]==="old"?"Perjanjian Lama":"Perjanjian Baru"}`;
  document.getElementById("modalIntro").textContent=intros[b[0]]||"Pengantar kitab ini akan disusun dan dilengkapi secara bertahap dengan memperhatikan konteks sejarah, sastra, dan pesan kitab.";
  const list=document.getElementById("chapterList");list.innerHTML="";
- document.getElementById("chapterMessage").textContent="Pilih nomor pasal untuk melihat ringkasan atau status kontennya.";
+ document.getElementById("chapterMessage").innerHTML="Pilih nomor pasal. Pembahasannya akan muncul di panel ini, tepat di bawah daftar nomor pasal.";
  for(let i=1;i<=b[1];i++){
    const btn=document.createElement("button");btn.className="chapter";btn.textContent=i;
    btn.addEventListener("click",()=>{
@@ -419,4 +451,4 @@ renderDictionary();
 showPage("beranda");
 </script>
 </body>
-</html>
+ </html>
